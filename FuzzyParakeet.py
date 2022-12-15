@@ -6,6 +6,7 @@ import json
 import os
 import platform
 import requests
+from bs4 import BeautifulSoup
 
 
 def notify_website_change(website):
@@ -30,6 +31,7 @@ class FuzzyParakeet:
         self.master.title("Fuzzy Parakeet")
         self.master.geometry("300x300")
 
+        self.websites = []
         self.websites = self.load_websites()
         self.lbl_websites = tk.Label(self.master, text="My Websites:")
         self.lbl_websites.pack()
@@ -67,7 +69,10 @@ class FuzzyParakeet:
         """Check if any of the websites have changed"""
         for website in self.websites:
             try:
-                website_text = requests.get(website).text
+                website_text = BeautifulSoup(
+                    requests.get(website).text,
+                    'html.parser'
+                ).text
             except:
                 tkmb.showerror("Error", f"Could not access {website}")
                 continue
@@ -111,6 +116,7 @@ class FuzzyParakeet:
             self.listbox.delete(self.websites.index(website))
             self.websites.remove(website)
             self.save_websites()
+            os.remove(f"Websites/{website.replace('/', '_')}")
 
     def add_website(self):
         """Get a website name and add it to the list"""
