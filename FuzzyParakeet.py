@@ -30,6 +30,10 @@ class FuzzyParakeet:
         self.master = tk.Tk()
         self.master.title("Fuzzy Parakeet")
         self.master.geometry("300x300")
+        self.master.iconphoto(
+            True,
+            tk.PhotoImage(file='Logo.png')
+        )
 
         self.websites = []
         self.websites = self.load_websites()
